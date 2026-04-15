@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Dataset {
+  id              String    @id @default(uuid())
+  name            String    @unique
+  description     String?
+  status          String    @default("active")
+  sourceType      String
+  sourceConfig    String?
+  schema          String?
+  freshness       String    @default("fresh")
+  recordCount     Int       @default(0)
+  sizeBytes       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastIngestedAt  DateTime?
+  lastTransformedAt DateTime?
+  
+  snapshots       DatasetSnapshot[]
+  qualityChecks   QualityCheck[]
+  alerts          Alert[]
+  transformations Transformation[] @relation("DatasetTransformations")
+  inputTransformations Transformation[] @relation("TransformationInputs")
+  pipelines       Pipeline[]          @relation("PipelineDatasets")
+}
+
+model DataSource {
+  id              String    @id @default(uuid())
+  name            String    @unique
+  type            String
+  connectionString String?
+  credentialsRef  String?
+  config          String?
+  isActive        Boolean   @default(true)
+  lastSyncAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Transformation {
+  id              String    @id @default(uuid())
+  name            String
+  description     String?
+  type            String
+  config          String
+  isEnabled       Boolean   @default(true)
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  datasetId       String?
+  dataset         Dataset?  @relation("DatasetTransformations", fields: [datasetId], references: [id])
+  inputDatasetIds String?
+  inputDatasets   Dataset[] @relation("TransformationInputs")
+  
+  lineageNodes    LineageNode[]
+}
+
+model LineageGraph {
+  id              String    @id @default(uuid())
+  name            String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  nodes           LineageNode[]
+  edges           LineageEdge[]
+}
+
+model LineageNode {
+  id              String    @id @default(uuid())
+  datasetId       String?
+  transformationId String?
+  nodeType        String
+  metadata        String?
+  createdAt       DateTime  @default(now())
+  
+  graphId         String
+  graph           LineageGraph @relation(fields: [graphId], references: [id], onDelete: Cascade)
+  dataset         Dataset?   @relation(fields: [datasetId], references: [id])
+  transformation Transformation? @relation(fields: [transformationId], references: [id])
+  
+  outgoingEdges   LineageEdge[] @relation("EdgeSource")
+  incomingEdges   LineageEdge[] @relation("EdgeTarget")
+}
+
+model LineageEdge {
+  id              String    @id @default(uuid())
+  edgeType        String
+  metadata        String?
+  createdAt       DateTime  @default(now())
+  
+  graphId         String
+  graph           LineageGraph @relation(fields: [graphId], references: [id], onDelete: Cascade)
+  sourceNodeId    String
+  targetNodeId    String
+  sourceNode      LineageNode @relation("EdgeSource", fields: [sourceNodeId], references: [id])
+  targetNode      LineageNode @relation("EdgeTarget", fields: [targetNodeId], references: [id])
+}
+
+model DatasetSnapshot {
+  id              String    @id @default(uuid())
+  datasetId       String
+  version         Int
+  checksum        String
+  recordCount     Int
+  sizeBytes       Int
+  storagePath     String
+  createdAt       DateTime  @default(now())
+  createdBy       String?
+  
+  dataset         Dataset   @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  
+  @@unique([datasetId, version])
+}
+
+model QualityCheck {
+  id              String    @id @default(uuid())
+  datasetId       String
+  name            String
+  description     String?
+  ruleType        String
+  ruleConfig      String
+  status          String    @default("passed")
+  failedRecords   Int?
+  totalRecords    Int?
+  executedAt      DateTime  @default(now())
+  errorMessage    String?
+  
+  dataset         Dataset   @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+}
+
+model Pipeline {
+  id              String    @id @default(uuid())
+  name            String
+  description     String?
+  schedule        String?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  datasets        Dataset[] @relation("PipelineDatasets")
+  transformations Transformation[] @relation("PipelineTransformations")
+  runs            PipelineRun[]
+  alerts          Alert[]
+}
+
+model PipelineRun {
+  id              String    @id @default(uuid())
+  pipelineId      String
+  status          String    @default("pending")
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  errorMessage    String?
+  metadata        String?
+  
+  pipeline        Pipeline  @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+}
+
+model Alert {
+  id              String    @id @default(uuid())
+  datasetId       String?
+  pipelineId      String?
+  severity        String
+  title           String
+  message         String
+  isRead          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  
+  dataset         Dataset?  @relation(fields: [datasetId], references: [id])
+  pipeline        Pipeline? @relation(fields: [pipelineId], references: [id])
+}

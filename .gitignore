@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.turbo/
+
+# Test coverage
+coverage/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+
+# Prisma
+apps/api/prisma/migrations/
+
+# Temporary
+*.tmp
+*.temp
+.cache/
+
+# Docker
+.dockerignore
+
+# Turborepo
+.turbo/
+
+# Build artifacts
+apps/*/dist
+packages/*/dist

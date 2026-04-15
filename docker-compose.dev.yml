@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8094:8094"
+    environment:
+      - NODE_ENV=development
+      - PORT=8094
+      - DATABASE_URL=file:/app/data/atlas-delta.db
+      - LOG_LEVEL=debug
+      - CORS_ORIGINS=*
+    volumes:
+      - ./apps/api:/app/apps/api
+      - ./packages:/app/packages
+      - ./data:/app/data
+    command: pnpm --filter @atlas-delta/api dev
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./apps/web:/app/apps/web
+    command: pnpm --filter @atlas-delta/web dev
+
+volumes:
+  data:

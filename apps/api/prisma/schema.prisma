@@ -29,6 +29,7 @@ model Dataset {
   transformations Transformation[] @relation("DatasetTransformations")
   inputTransformations Transformation[] @relation("TransformationInputs")
   pipelines       Pipeline[]          @relation("PipelineDatasets")
+  lineageNodes    LineageNode[]
 }
 
 model DataSource {
@@ -61,6 +62,7 @@ model Transformation {
   inputDatasets   Dataset[] @relation("TransformationInputs")
   
   lineageNodes    LineageNode[]
+  pipelines       Pipeline[]          @relation("PipelineTransformations")
 }
 
 model LineageGraph {

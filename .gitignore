@@ -51,3 +51,6 @@ apps/api/prisma/migrations/
 # Build artifacts
 apps/*/dist
 packages/*/dist
+
+# TypeScript build info
+*.tsbuildinfo

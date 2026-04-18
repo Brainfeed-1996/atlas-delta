@@ -16,6 +16,6 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm --filter @atlas-delta/models build
 RUN pnpm --filter @atlas-delta/core build
 
-EXPOSE 8094 3000
+EXPOSE 8100 3000
 
 CMD ["pnpm", "dev"]

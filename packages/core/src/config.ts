@@ -12,7 +12,7 @@ export interface Config {
 }
 
 export const defaultConfig: Config = {
-  port: parseInt(process.env.PORT || '8094', 10),
+  port: parseInt(process.env.PORT || '8100', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   apiPrefix: process.env.API_PREFIX || '/api/v1',
   corsOrigins: (process.env.CORS_ORIGINS || '*').split(','),

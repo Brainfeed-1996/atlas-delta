@@ -124,7 +124,7 @@ pnpm dev
 docker-compose up -d
 ```
 
-Access the dashboard at `http://localhost:3000` and API at `http://localhost:8100`
+Access the dashboard at `http://localhost:3000` and API at `http://localhost:8200`
 
 ---
 
@@ -273,14 +273,14 @@ Create `.env` files as needed:
 
 ```
 ```
-PORT=8100
+PORT=8200
 NODE_ENV=development
 DATABASE_URL=file:./data/atlas-delta.db
 LOG_LEVEL=debug
 CORS_ORIGINS=*
 
 # Web (.env.local)
-VITE_API_URL=http://localhost:8100/api/v1
+VITE_API_URL=http://localhost:8200/api/v1
 ```
 
 ### Docker
@@ -461,7 +461,7 @@ docker build -t atlas-delta:latest .
 
 # Run container
 docker run -d \
-  -p 8100:8100 \
+  -p 8200:8200 \
   -p 3000:3000 \
   -e NODE_ENV=production \
   -e DATABASE_URL=file:/app/data/atlas-delta.db \

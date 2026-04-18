@@ -31,7 +31,7 @@ pnpm dev:web
 Une fois les serveurs démarrés :
 
 - **Frontend** : http://localhost:3000
-- **API** : http://localhost:8100/api/v1
+- **API** : http://localhost:8200/api/v1
 - **Documentation API** : Voir README.md pour les endpoints
 
 ## ✨ Nouvelles fonctionnalités ajoutées
@@ -102,7 +102,7 @@ CORS_ORIGINS=*
 
 **Frontend (.env.local) :**
 ```
-VITE_API_URL=http://localhost:8100/api/v1
+VITE_API_URL=http://localhost:8200/api/v1
 ```
 
 ## 🎨 Palette de couleurs

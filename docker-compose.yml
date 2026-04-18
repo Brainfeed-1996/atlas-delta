@@ -6,10 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8100:8100"
+      - "8200:8200"
     environment:
       - NODE_ENV=development
-      - PORT=8100
+      - PORT=8200
       - DATABASE_URL=file:/app/data/atlas-delta.db
       - LOG_LEVEL=debug
       - CORS_ORIGINS=http://localhost:3000

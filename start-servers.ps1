@@ -6,7 +6,7 @@ Write-Host "Starting Atlas Delta servers..." -ForegroundColor Cyan
 Write-Host ""
 
 # Check if ports are available
-$apiPort = 8100
+$apiPort = 8200
 $webPort = 3000
 
 function Test-PortAvailable {

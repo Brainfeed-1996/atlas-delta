@@ -1,0 +1,15 @@
+{
+  "name": "atlas-delta",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Operational data and decision platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "echo build placeholders",
+    "test": "echo test placeholders",
+    "lint": "echo lint placeholders"
+  }
+}
